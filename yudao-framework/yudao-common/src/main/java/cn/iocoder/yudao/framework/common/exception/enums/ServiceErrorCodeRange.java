@@ -45,4 +45,6 @@ public class ServiceErrorCodeRange {
 
     // 模块 ai 错误码区间 [1-022-000-000 ~ 1-023-000-000)
 
+    // 模块 appstore 错误码区间 [1-015-000-000 ~ 1-016-000-000)
+
 }
