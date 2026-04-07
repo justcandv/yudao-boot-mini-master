@@ -315,6 +315,9 @@ yudao:
       - /admin-api/system/user/profile/**
       - /admin-api/system/auth/**
     ignore-tables:
+      - appstore_category
+      - appstore_app
+      - appstore_app_version
     ignore-caches:
       - user_role_ids
       - permission_menu_ids
