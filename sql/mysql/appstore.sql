@@ -72,6 +72,40 @@ CREATE TABLE `appstore_app_version` (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '应用版本表';
 
 -- ----------------------------
+-- Table structure for appstore_device_auth（设备认证）
+-- ----------------------------
+DROP TABLE IF EXISTS `appstore_device_auth`;
+CREATE TABLE `appstore_device_auth` (
+    `id`                         bigint        NOT NULL AUTO_INCREMENT COMMENT '编号',
+    `device_id`                  varchar(64)   NOT NULL                COMMENT '设备唯一标识',
+    `device_model`               varchar(128)  NOT NULL                COMMENT '设备型号',
+    `os_version`                 varchar(64)   NOT NULL                COMMENT '系统版本',
+    `app_version`                varchar(64)   NOT NULL                COMMENT '应用版本号',
+    `device_code`                varchar(32)   NOT NULL                COMMENT '设备授权码',
+    `code_expires_time`          datetime      NOT NULL                COMMENT '设备码过期时间',
+    `poll_interval`              int           NOT NULL DEFAULT 5      COMMENT '轮询间隔（秒）',
+    `status`                     tinyint       NOT NULL DEFAULT 0      COMMENT '状态（0 待授权 1 已授权 2 已登出）',
+    `authorized_user_id`         bigint                 DEFAULT NULL   COMMENT '授权用户编号',
+    `device_name`                varchar(128)           DEFAULT ''     COMMENT '设备名称',
+    `access_token`               varchar(64)            DEFAULT NULL   COMMENT '访问令牌',
+    `access_token_expires_time`  datetime               DEFAULT NULL   COMMENT '访问令牌过期时间',
+    `refresh_token`              varchar(64)            DEFAULT NULL   COMMENT '刷新令牌',
+    `refresh_token_expires_time` datetime               DEFAULT NULL   COMMENT '刷新令牌过期时间',
+    `last_poll_time`             datetime               DEFAULT NULL   COMMENT '最近轮询时间',
+    `last_login_time`            datetime               DEFAULT NULL   COMMENT '最近登录时间',
+    `creator`                    varchar(64)            DEFAULT ''     COMMENT '创建者',
+    `create_time`                datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updater`                    varchar(64)            DEFAULT ''     COMMENT '更新者',
+    `update_time`                datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted`                    bit(1)        NOT NULL DEFAULT b'0'   COMMENT '是否删除',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `uk_device_id` (`device_id`, `deleted`) USING BTREE,
+    UNIQUE INDEX `uk_device_code` (`device_code`, `deleted`) USING BTREE,
+    UNIQUE INDEX `uk_access_token` (`access_token`) USING BTREE,
+    UNIQUE INDEX `uk_refresh_token` (`refresh_token`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '设备认证表';
+
+-- ----------------------------
 -- 菜单与权限初始化数据（插入 system_menu）
 -- 注意：id 使用较大数值避免与已有数据冲突，实际部署时按需调整
 -- ----------------------------
