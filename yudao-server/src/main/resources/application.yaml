@@ -12,8 +12,9 @@ spring:
   servlet:
     # 文件上传相关配置项
     multipart:
-      max-file-size: 16MB # 单个文件大小
-      max-request-size: 32MB # 设置总上传的文件大小
+      # APK 常大于 16MB；过小会导致 Tomcat 丢弃请求体时连接被重置（net::ERR_CONNECTION_RESET）
+      max-file-size: 256MB
+      max-request-size: 260MB
 
   # Jackson 配置项
   jackson:
@@ -35,6 +36,9 @@ server:
       enabled: true
       charset: UTF-8 # 必须设置 UTF-8，避免 WebFlux 流式返回（AI 场景）会乱码问题
       force: true
+  tomcat:
+    # 上传超限或中断时需吞掉剩余 body；默认过小易触发 RST，前端表现为 Network Error
+    max-swallow-size: -1
 
 --- #################### 接口文档配置 ####################
 
@@ -308,7 +312,7 @@ yudao:
     delete-batch-enable: true # 是否生成批量删除接口
     unit-test-enable: false # 是否生成单元测试
   tenant: # 多租户相关配置项
-    enable: true
+    enable: false
     ignore-urls:
       - /jmreport/* # 积木报表，无法携带租户编号
       - /app-api/device/** # 设备认证开放接口，不强制要求传递租户编号

@@ -20,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -151,6 +152,9 @@ public class ApiEncryptFilter extends ApiRequestFilter {
                 }
                 return annotation;
             }
+        } catch (HttpRequestMethodNotSupportedException ignored) {
+            // 路径命中映射但 HTTP 方法不符（如对仅 POST 的接口发 GET），无需解析 @ApiEncrypt
+            return null;
         } catch (Exception e) {
             log.error("[getApiEncrypt][url({}/{}) 获取 @ApiEncrypt 注解失败]",
                     request.getRequestURI(), request.getMethod(), e);
